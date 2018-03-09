@@ -26,7 +26,8 @@
         width: 350px;
         margin: 3%;
       }
-      form{
+
+      #event > form{
            background-position: center;
            background-repeat: no-repeat;
            background-size: cover;
@@ -40,11 +41,10 @@
              margin:40px 250px 250px 250px;
              margin: auto;
              margin-top: 40px ;
-             width: 80%;
+             /* width: 80%; */
              font-family: 'Roboto Condensed', sans-serif;
-
       }
-      p{
+      p,span{
         font-size: 30px;
         color: #EBEBED;
         text-shadow:3px 3px 20px #FFFFFF ;
@@ -57,6 +57,16 @@
           background-image: url("/project/picture/img/gray2.jpg");
           background-size: cover ;
           background-attachment: fixed;
+      }
+
+      .round {
+        border-radius: 50%;
+        padding: 8px 16px;
+      }
+
+      .green {
+        background-color: #4CAF50;
+        color: white;
       }
 
     </style>
@@ -89,7 +99,7 @@
 
     $events = $database->loadEvents();
     function renderEvents($events,$page=1){
-      for ($i = ($page*25)-25; $i < count($events); $i++){
+      for ($i = ($page*25)-25; $i < count($events) && $i < $page*25; $i++){
             $pic=$events[$i]->get_image();
 
         $output = '<form id="form'.$i.'" class="box" action="" method="get" style="background-image: url('.$pic.')">
@@ -110,13 +120,77 @@
       }
     }
 
-    echo '<div class="contain_box">';
-    if (isset($page)){
-      renderEvents($events,$page);
+    echo '<div id="event" class="contain_box">';
+    if (isset($_GET['page'])){
+      $page = $_GET['page'];
     } else {
-      renderEvents($events);
+      $page = 1;
     }
+    renderEvents($events,$page);
     echo '</div>';
+    $totalNumberPage = ceil(count($events)/25);
+    $movePage;
+    if ($page == $totalNumberPage && $page != 1){
+      $movePage = '<div class="contain_box" style="width:100%;">
+                      <form id="backPage" class="" action="" method="get">
+                        <a id="backPageBth" style="text-decoration: none" class="green round">&#8249;</a>
+                        <input hidden type="number" name="page" value="'.strval($page-1).'">
+                      </form>
+                      <form id="gotoPage" class="" action="" method="get">
+                        <input type="number" style="width:60%" name="page" min="1" max="'.strval($totalNumberPage).'" value="'.$page.'">/<span>'.strval($totalNumberPage).'</span>
+                      </form>
+                      <form id="nextPage" hidden class="" action="" method="get">
+                        <a id="nextPageBth" style="text-decoration: none" class="green round">&#8250;</a>
+                        <input hidden type="number" name="page" value="'.strval($page+1).'">
+                      </form>
+                   </div>';
+    } else if ($page == 1 && $page != $totalNumberPage){
+      echo 555;
+      $movePage = '<div class="contain_box" style="width:100%;">
+                      <form id="backPage" hidden class="" action="" method="get">
+                        <a id="backPageBth" style="text-decoration: none" class="green round">&#8249;</a>
+                        <input hidden type="number" name="page" value="'.strval($page-1).'">
+                      </form>
+                      <form id="gotoPage" class="" action="" method="get">
+                        <input type="number" style="width:60%" name="page" min="1" max="'.strval($totalNumberPage).'" value="'.$page.'">/<span>'.strval($totalNumberPage).'</span>
+                      </form>
+                      <form id="nextPage" class="" action="" method="get">
+                        <a id="nextPageBth" style="text-decoration: none" class="green round">&#8250;</a>
+                        <input hidden type="number" name="page" value="'.strval($page+1).'">
+                      </form>
+                   </div>';
+    } else if ($page == 1 && $page == $totalNumberPage){
+      $movePage = '<div class="contain_box" style="width:100%;">
+                      <form id="backPage" hidden class="" action="" method="get">
+                        <a id="backPageBth" style="text-decoration: none" class="green round">&#8249;</a>
+                        <input hidden type="number" name="page" value="'.strval($page-1).'">
+                      </form>
+                      <form id="gotoPage" class="" action="" method="get">
+                        <input type="number" style="width:60%" name="page" min="1" max="'.strval($totalNumberPage).'" value="'.$page.'">/<span>'.strval($totalNumberPage).'</span>
+                      </form>
+                      <form id="nextPage" hidden class="" action="" method="get">
+                        <a id="nextPageBth" style="text-decoration: none" class="green round">&#8250;</a>
+                        <input hidden type="number" name="page" value="'.strval($page+1).'">
+                      </form>
+                   </div>';
+    } else {
+      $movePage = '<div class="contain_box" style="width:100%;">
+                      <form id="backPage" class="" action="" method="get">
+                        <a id="backPageBth style="text-decoration: none" class="green round">&#8249;</a>
+                        <input hidden type="number" name="page" value="'.strval($page-1).'">
+                      </form>
+                      <form id="gotoPage" class="" action="" method="get">
+                        <input type="number" style="width:60%" name="page" min="1" max="'.strval($totalNumberPage).'" value="'.$page.'">/<span>'.strval($totalNumberPage).'</span>
+                      </form>
+                      <form id="nextPage" class="" action="" method="get">
+                        <a id="nextPageBth" style="text-decoration: none" class="green round">&#8250;</a>
+                        <input hidden type="number" name="page" value="'.strval($page+1).'">
+                      </form>
+                   </div>';
+    }
+
+
+    echo $movePage;
 
      ?>
      <!-- <script src="jquery-3.3.1.min.js" charset="utf-8"></script> -->
@@ -126,7 +200,7 @@
             console.log("Ready start");
             <?php
               function renderScriptEvents($events,$page=1){
-                for ($i = ($page*25)-25; $i < count($events); $i++){
+                for ($i = ($page*25)-25; $i < count($events) && $i < $page*25; $i++){
                 $output = '$("#form'.$i.'").on({
                   click: function(){
                     document.getElementById("form'.$i.'").submit();
@@ -143,6 +217,18 @@
               }
 
            ?>
+
+           $("#backPageBth").on({
+             click: function(){
+               document.getElementById("backPage").submit();
+             }
+           });
+
+           $("#nextPageBth").on({
+             click: function(){
+               document.getElementById("nextPage").submit();
+             }
+           });
 
           });
     </script>
