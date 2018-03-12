@@ -40,11 +40,11 @@ td{
 body {font-family: Arial, Helvetica, sans-serif;}
 
 /* The Modal (background) */
-.modal {
+.modal  {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 50px; /* Location of the box */
+    padding-top: 80px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -53,6 +53,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
 
 /* Modal Content */
 .modal-content {
@@ -132,8 +133,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
   <body>
 
 
-
-
   <button class="btn btn-info" onclick="add()">Add user</button>
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
 
@@ -141,7 +140,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
   <tr>
     <th>ac_id</th>
     <th>username</th>
-    <th>password</th>
+    <!-- <th>password</th> -->
     <th>firstname</th>
     <th>lastname</th>
     <th >age</th>
@@ -152,8 +151,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
     <th >id</th>
     <th >type</th>
     <th >image</th>
+    <th >status</th>
     <th>action</th>
-
   </tr>
 </thead>
 <tbody>
@@ -161,7 +160,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
     <tr>
       <td><?= $person->id_ac; ?></td>
       <td><?= $person->username; ?></td>
-      <td><?= $person->password; ?></td>
+      <!-- <td><?= $person->password; ?></td> -->
       <td><?= $person->first_name; ?></td>
       <td><?= $person->last_name; ?></td>
       <td><?= $person->age; ?></td>
@@ -170,35 +169,42 @@ body {font-family: Arial, Helvetica, sans-serif;}
       <td><?= $person->phone; ?></td>
       <td><?= $person->address; ?></td>
       <td><?= $person->ID; ?></td>
-      <td><?= $person->type; ?></td>
 
+      <td><?= $person->type; ?></td>
       <?php
 
        $pic=$person->image;
 
-
       echo "  <td><img src=$pic class='rounded-circle' height='35' width='35'></td>";
-
-
 
        $person->address
 
       ?>
       </td>
+      <?php
+          if ($person->status=='y'){
+              $m='verify email';
+          }else if($person->status=='n'){
+            $m='not verify email';
+          }else{
+            $m='baned';
+          }
+       ?>
+
+      <td><?= $m ?></td>
       <td>
 
 
-        <button class="btn btn-info" onclick="ball('<?= $person->username ?>','<?= $person->password ?>','<?= $person->first_name ?>
+        <button class="btn btn-info" style="margin-bottom:20%;width:100%;" onclick="ball('<?= $person->username ?>','<?= $person->password ?>','<?= $person->first_name ?>
           ','<?= $person->last_name ?>','<?= $person->age ?>','<?= $person->gender ?>','<?= $person->email ?>','<?= $person->phone ?>
-          ','<?= $person->address ?>','<?= $person->ID ?>','<?= $person->type ?>','<?= $person->image ?>')">Edit</button>
+          ','<?= $person->address ?>','<?= $person->ID ?>','<?= $person->type ?>','<?= $person->image ?>','<?= $person->id_ac ?>','<?= $person->status ?>')">Edit</button>
+          <a style="margin-bottom:20%;width:100%;" onclick="return confirm('Are you sure you want to ban this entry?')" href="ban.php?id_ac=<?= $person->id_ac ?>" class='btn btn-danger'>Ban</a>
+        <!-- <a hidden onclick="return confirm('Are you sure you want to delete this entry?')" href="delete.php?id_ac=<?= $person->id_ac ?>" class='btn btn-danger'>Delete</a> -->
 
-        <a onclick="return confirm('Are you sure you want to delete this entry?')" href="delete.php?username=<?= $person->username ?>" class='btn btn-danger'>Delete</a>
       </td>
     </tr>
   <?php endforeach;
   ?>
-
-
 
 </tr>
 </tbody>
@@ -208,9 +214,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="myModal" class="modal" >
 
-  <!-- Modal content -->
   <div class="modal-content" >
     <div class="modal-header">
       <span class="close">&times;</span>
@@ -218,20 +223,21 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
     <div class="modal-body">
       <form id='mo1' class="" action="update.php" method="post" enctype="multipart/form-data">
-        <input hidden type="text" id="idt" name="idt" value=""></p>
+
+          <input  hidden type="text" id="id_ac" name="id_ac" value=""></p>
 
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-sm">username </span>
           </div>
-        <input id='usernameNew' type="text" name="usernameNew" value="" placeholder="Enter your username" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        <input id='usernameNew' readonly type="text" name="usernameNew" value="" placeholder="Enter your username" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
         </div>
 
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-sm">password </span>
           </div>
-        <input id='passwordNew' type="text" name="passwordNew" value="" placeholder="Enter password" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        <input readonly onclick="myFunction()" id='passwordNew' type="text" name="passwordNew" value="" placeholder="Enter password" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
         </div>
 
         <div class="input-group input-group-sm mb-3">
@@ -255,7 +261,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <input id='ageNew' type="number" name="ageNew" value="" placeholder="อายุ" min="1" max="200"  data-format = "iii" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
         </div>
 
-
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-sm">gender </span>
@@ -265,7 +270,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
              <option  value="f">หญิง</option>
            </select>
         </div>
-
 
           <div class="input-group input-group-sm mb-3">
             <div class="input-group-prepend">
@@ -299,9 +303,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
           onKeyUp="if(this.value*1!=this.value) this.value='' ;"  minlength = "13" maxlength = "13" data-format = "ddddddddddddd" required value="" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
       </div>
 
-
+      <center><img id="imageold" style="height:150px;weight:150px;"  src='/project/picture/img/icon.png' > </center>
        <input  hidden id='imageNew' type="text" name="imageNew" value="" >
-        <input type="file" class="form-control" id="inputGroupFile02" name='file'>
+        <input onchange="readURL(this)" type="file" class="form-control" id="inputGroupFile02" name='file'>
         <br>
 
 
@@ -317,7 +321,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
       </div>
     </div>
 
-
+    <input hidden id='statusNew' type="text" name="statusNew" value="">
     <div class="modal-footer">
         <input class='btn btn-danger'  type="submit" name="" value="OK">
     </form>
@@ -325,16 +329,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
   </div>
 </div>
 
-<div id="myModal2" class="modal">
-
-
+<div id="myModal2" class="modal" >
   <div class="modal-content" >
     <div class="modal-header">
       <span class="close2" >&times;</span>
     </div>
     <div class="modal-body">
       <form id='mo1' class="" action="add.php" method="post" enctype="multipart/form-data">
-        <input hidden type="text" id="idt" name="idt" value=""></p>
+
 
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
@@ -417,8 +419,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
 
       <!-- image : <input  type="text" name="image" value="" ><br><br> -->
-      <input type="file" class="form-control" id="inputGroupFile02" name='file' >
-      <br>
+      <!-- <input type="file" class="form-control" id="inputGroupFile02" name='file' > -->
+      <!-- <br> -->
 
       <div class="input-group input-group-sm mb-3">
         <div class="input-group-prepend">
@@ -432,13 +434,23 @@ body {font-family: Arial, Helvetica, sans-serif;}
         </div>
 
 
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">status verify email</span>
+          </div>
+          <select  name="status">
+               <option  value="n">n</option>
+                <option  value="y">y</option>
+              </select>
+          </div>
+
+    </div>
+        <input class='btn btn-info'  type="submit" name="" value="OK">
 
     </div>
 
-    <div class="modal-footer">
-        <input class='btn btn-danger'  type="submit" name="" value="OK">
-    </form>
-    </div>
+      </form>
+
   </div>
 
 </div>
@@ -446,6 +458,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
   </body>
 </html>
 <script>
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#imageold').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 var modal = document.getElementById('myModal');
 var modal2 = document.getElementById('myModal2');
@@ -455,26 +478,29 @@ var span = document.getElementsByClassName("close")[0];
 var span2 = document.getElementsByClassName("close2")[0];
 
 
-function ball(username,password,first_name,last_name,age,gender,email,phone,address,id,type,image) {
+function ball(username,password,first_name,last_name,age,gender,email,phone,address,id,type,image,id_ac,status) {
 
     modal.style.display = "block";
-    document.getElementById("idt").value=username;
-    document.getElementById("usernameNew").value=username;
-    document.getElementById("passwordNew").value=password;
-    document.getElementById("first_nameNew").value=first_name;
-    document.getElementById("last_nameNew").value=last_name;
-    document.getElementById("ageNew").value=age;
-    document.getElementById("emailNew").value=email;
+    document.getElementById("id_ac").value=id_ac.trim();
+    document.getElementById("usernameNew").value=username.trim();
+    document.getElementById("passwordNew").value=password.trim();
+    document.getElementById("first_nameNew").value=first_name.trim();
+    document.getElementById("last_nameNew").value=last_name.trim();
+    document.getElementById("ageNew").value=age.trim();
+    document.getElementById("emailNew").value=email.trim();
     document.getElementById("phoneNew").value=phone.trim();
-    document.getElementById("addressNew").value=address;
-    document.getElementById("idNew").value=id;
-    document.getElementById("imageNew").value=image;
+    document.getElementById("addressNew").value=address.trim();
+    document.getElementById("idNew").value=id.trim();
+    document.getElementById("imageNew").value=image.trim();
+    document.getElementById("imageold").src=image.trim();
+
+    document.getElementById("statusNew").value=status.trim();
 
     var element = document.getElementById('select');
-    element.value = type;
+    element.value = type.trim();
 
     var element = document.getElementById('genderNew');
-    element.value = gender;
+    element.value = gender.trim();
 }
 
 function add() {
@@ -488,9 +514,11 @@ function add() {
 
 span.onclick = function() {
     modal.style.display = "none";
+    document.getElementById('passwordNew').readOnly=true;
 }
 span2.onclick = function() {
     modal2.style.display = "none";
+
 
 }
 
@@ -499,9 +527,19 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
         modal2.style.display = "none";
+        document.getElementById('passwordNew').readOnly=true;
     }
     if (event.target == modal2) {
         modal2.style.display = "none";
     }
 }
+
+function myFunction() {
+
+    if(confirm('Are you sure you want to change password ?')){
+      document.getElementById('passwordNew').readOnly=false;
+    }
+
+}
+
 </script>

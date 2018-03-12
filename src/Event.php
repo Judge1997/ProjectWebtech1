@@ -12,11 +12,16 @@ class Event{
   protected $time;
   protected $location;
   protected $map;
+  protected $current_capacity;
   protected $capacity;
   protected $free;
   protected $type;
+  protected $precondition;
+  protected $create_time;
+  protected $status;
+  protected $google_form_url;
 
-  function __construct($id_ev,$id_ac,$name_event, $detail,$image, $teaser_VDO,$date, $time,$location, $map,$capacity, $free,$type)
+  function __construct($id_ev,$id_ac,$name_event, $detail,$image, $teaser_VDO,$date, $time,$location, $map,$current_capacity,$capacity, $free,$type,$precondition,$create_time,$status,$google_form_url)
   {
     $this->id_ev = $id_ev;
     $this->id_ac = $id_ac;
@@ -28,9 +33,17 @@ class Event{
     $this->time = $time;
     $this->location = $location;
     $this->map = $map;
+    $this->current_capacity = $current_capacity;
     $this->capacity = $capacity;
     $this->free = $free;
     $this->type = $type;
+
+    $this->precondition = $precondition;
+    $this->create_time = $create_time;
+    $this->status = $status;
+      $this->google_form_url = $google_form_url;
+
+
   }
 
   function get_id_ev(){
@@ -41,7 +54,7 @@ class Event{
     return $this->id_ac;
   }
 
-  function getName_event(){
+  function get_name_event(){
     return $this->name_event;
   }
 
@@ -72,6 +85,10 @@ class Event{
     return $this->map;
   }
 
+  function get_current_capacity(){
+    return $this->current_capacity;
+  }
+
   function get_capacity(){
     return $this->capacity;
   }
@@ -83,6 +100,22 @@ class Event{
   function get_type(){
     return $this->type;
   }
+  function get_precondition(){
+    return $this->precondition;
+  }
+
+  function get_create_time(){
+    return $this->create_time;
+  }
+
+  function get_status(){
+    return $this->status;
+  }
+
+  function get_google_form_url(){
+    return $this->google_form_url;
+  }
+
 
 }
 

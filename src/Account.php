@@ -14,8 +14,9 @@ namespace Oop;
    protected $id;
    protected $type;
    protected $image;
+   protected $status;
 
-    function __construct($id_ac,$username, $password,$first_name, $last_name,$age, $gender,$email, $phone,$address, $id,$type, $image)
+    function __construct($id_ac,$username, $password,$first_name, $last_name,$age, $gender,$email, $phone,$address, $id,$type, $image,$status)
     {
        $this->id_ac = $id_ac;
        $this->username = $username;
@@ -30,6 +31,7 @@ namespace Oop;
        $this->id = $id;
        $this->type = $type;
        $this->image = $image;
+       $this->status = $status;
     }
 
     function getIdAcount(){
@@ -76,7 +78,9 @@ namespace Oop;
         return $this->image;
     }
 
-
+    function getStatus(){
+      return $this->status;
+    }
 
     function setUsername($username){
          $this->username = $username;

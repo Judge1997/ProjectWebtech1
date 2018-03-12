@@ -4,20 +4,17 @@ use Oop\Account;
 use Oop\Database;
 
 
-if(!isset($_SESSION)){
-    session_start();
+if (!isset($_SESSION['user'])){
+  echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
 }
-
-if ($_SESSION['user']->getType()!='admin'){
+if ($_SESSION['user']->getType()=='attendant'){
   echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
 }else{
-  $username = $_GET['username'];
-  //  $connection = new PDO('mysql:host=localhost:3306;dbname=project;charset=utf8mb4','root','');
-  //  $affectedRows = $connection->exec( "DELETE FROM accounts WHERE username='$username'");
-  $db=new Database();
-  $db->deleteEvent($username);
-   echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/manageuser\";</script>";
-}
+  $id_ev = $_GET['id_ev'];
 
+  $db=new Database();
+  $db->updateEventStatus($id_ev,"n");
+  echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/manageevent/manageevent.php\";</script>";
+}
 
  ?>

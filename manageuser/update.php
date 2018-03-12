@@ -4,15 +4,14 @@ include_once("../menubar.php");
 use Oop\Account;
 use Oop\Database;
 
-if(!isset($_SESSION)){
-        session_start();
+if (!isset($_SESSION['user'])){
+  echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
 }
-
 if ($_SESSION['user']->getType()!='admin'){
   echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
 }
 else{
-  $idt=$_POST["idt"];
+  $id_ac=$_POST["id_ac"];
 
   $username = $_POST["usernameNew"];
   $password = $_POST["passwordNew"];
@@ -25,6 +24,7 @@ else{
   $address = $_POST["addressNew"];
   $id = $_POST["idNew"];
   $type = $_POST["select"];
+  $status=$_POST["statusNew"];
 
 
 
@@ -32,7 +32,7 @@ else{
     $pic= basename($_FILES['file']["name"]);
     $image= "/project/picture/user/$pic";
     if (move_uploaded_file($_FILES["file"]["tmp_name"],"../picture/user/$pic")){
-        echo "uploaded";
+        // echo "uploaded";
     }else{
         $image = $_POST["imageNew"];
     }
@@ -49,8 +49,11 @@ else{
   // $affectedRows = $connection->exec($sql);
 
   $db=new Database();
-  $user = new Account('',$username,$password,$first_name,$last_name,$age,$gender,$email,$phone,$address,$id,$type,$image);
-  $db->updateAccounts($user,$idt);
+
+
+   $user = new Account($id_ac,$username,$password,$first_name,$last_name,$age,$gender,$email,$phone,$address,$id,$type,$image,$status);
+   $db->updateAccounts($user);
+
 
   echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/manageuser\";</script>";
 }

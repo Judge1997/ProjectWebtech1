@@ -3,8 +3,8 @@ include_once("../menubar.php");
 use Oop\Account;
 use Oop\Database;
 
-if(!isset($_SESSION)){
-    session_start();
+if (!isset($_SESSION['user'])){
+  echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
 }
 if ($_SESSION['user']->getType()!='admin'){
   echo "<script type='text/javascript'>window.location.href = \"http://localhost/project/\";</script>";
@@ -46,37 +46,35 @@ if ($_SESSION['user']->getType()!='admin'){
   $type = $_POST["type"];
 
   }
+  if(isset($_POST["status"])){
+    $status=$_POST["status"];
 
-  if (isset($_FILES['file'])){
-    $pic= basename($_FILES['file']["name"]);
-
-    $image= "/project/picture/user/$pic";
-    if ($image="/project/picture/user/"){
-        $image="/project/picture/img/icon.png";
-    }
-    if (move_uploaded_file($_FILES["file"]["tmp_name"],"../picture/$pic")){
-        echo "uploaded";
-    }else{
-        echo "cant";
-    }
-        // echo "<img src='$image'>";
   }
+
+  // if (isset($_FILES['file'])){
+  //   $pic= basename($_FILES['file']["name"]);
+  //
+  //   $image= "/project/picture/user/$pic";
+  //   if ($image="/project/picture/user/"){
+  //       $image="/project/picture/img/icon.png";
+  //   }
+  //   if (move_uploaded_file($_FILES["file"]["tmp_name"],"../picture/$pic")){
+  //       echo "uploaded";
+  //   }else{
+  //       echo "cant";
+  //   }
+  //
+  // }
 
 
     if ($username!="" && $password!=""  && $first_name!=""  && $last_name!=""  && $age!=""){
 
       $db=new Database();
-      $count=$db->loadAccounts();
-      $num=0;
-          if (sizeof($count)<=0){
 
-          }else{
-              $num= $count[sizeof($count)-1]->getIdAcount();
-          }
-
-      $num+=1;
-      $user = new Account($num,$username,$password,$first_name,$last_name,$age,$gender,$email,$phone,$address,$id,$type,$image);
+      $passhash=password_hash($password, PASSWORD_DEFAULT);
+      $user = new Account(0,$username,$passhash,$first_name,$last_name,$age,$gender,$email,$phone,$address,$id,$type,$image,$status);
       $db->addAccounts($user);
+
 
       //
       //   $connection = new PDO('mysql:host=localhost:3306;dbname=project;charset=utf8mb4','root','');
