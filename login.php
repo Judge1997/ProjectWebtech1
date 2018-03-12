@@ -21,12 +21,31 @@
       $password = $_POST["password"];
     }
 
-    if ($username!="" && $password!=""){
+    // echo "$password";
+    echo "<br>";
+    if(password_verify('1234', '$2y$10$VhjJhitVLbR4Hp1C2bPEw.mWxhbm0ONsOAjTBgm/F/KZuXmRlQOVG')){
+      // echo "true";
+    }else{
+      // echo "false";
+    }
 
+    if ($username!="" && $password!=""){
       $db=new Database();
-      if ($db->checkUsernameAndPassword($username,$password)!="wrong"){
+
+      if ($db->checkUsernameAndPassword($username,$password)!="wrong" && $db->checkUsernameAndPassword($username,$password)->getStatus()!='b'){
+
           $_SESSION['user']=$db->checkUsernameAndPassword($username,$password);
-          echo "<script type='text/javascript'>window.location.href = \"http://localhost/project\";</script>";
+          if (isset($_GET['id_ev'])){
+            echo '<script type="text/javascript">window.location.href = "http://localhost/project/page.php?id_ev='.$_GET['id_ev'].'";</script>';
+          } else {
+            echo "<script type='text/javascript'>window.location.href = \"http://localhost/project\";</script>";
+          }
+      } else {
+          if ($db->checkUsernameAndPassword($username,$password)=='wrong'){
+              echo '<script>alert("Your username or password is incorrect.");</script>';
+          }else{
+            echo '<script>alert("Your account has been suspended.");</script>';
+          }
       }
 
     }
@@ -43,9 +62,9 @@
 
     @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
        body{
-         background-color: #F1F1F1;
+         /* background-color: #F1F1F1; */
            align-items: center;
-             background-image: url("/project/picture/img/gray2.jpg");
+             /* background-image: url("/project/picture/img/gray2.jpg"); */
          /* background-image: url("HomeBg.jpg"); */
        }
       form{
@@ -97,7 +116,7 @@
   </head>
   <body id="main"  >
 
-  <form  method="post">
+  <form  method="post" style="background-color: #F1F1F1;">
       <br>
       <img src="picture/img/id2.png" width="150" Heigh="150" style="">
 
@@ -122,7 +141,9 @@
 
 
       <!-- <h1 class="pw">Password  <input class="form-control" type="text" name="password" value=""><br></h1> -->
-      <h1 class="ac"><center><input class="btn btn-info" type="submit" name="submit" value="-->" id="but"></center><h1>
+      <h1 class="ac"><center><input class="btn btn-info" type="submit" name="submit" value="Login" id="but"></center><h1>
+
+        <a  href="forgotPassword.php" style="font-size:16px">Forgot password?</a>
     </form>
 
   </body>

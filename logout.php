@@ -5,5 +5,9 @@ session_destroy();
  ?>
 
 <?php
- header("Refresh:0; url=login.php");
+  if (isset($_GET['id_ev'])){
+    echo '<script type="text/javascript">window.location.href = "http://localhost/project/page.php?id_ev='.$_GET['id_ev'].'";</script>';
+  } else {
+    header("Refresh:0; url=login.php");
+  }
 ?>
